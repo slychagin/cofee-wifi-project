@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, URLField, SelectField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, URL
 import csv
 
@@ -11,6 +11,9 @@ Bootstrap(app)
 
 
 class CafeForm(FlaskForm):
+    """
+    This class create Flask-WTForm
+    """
     cafe = StringField('Cafe name', validators=[DataRequired()])
     location_url = StringField('Cafe Location on Google Maps (URL)',
                                validators=[DataRequired(), URL(message='Invalid URL address.')])
@@ -35,6 +38,10 @@ def home():
 
 @app.route('/add', methods=["GET", "POST"])
 def add_cafe():
+    """
+    This function render add.html file and save data to csv file
+    :return: render_template('add.html', form=form)
+    """
     form = CafeForm()
     if form.validate_on_submit():
         data = request.form
@@ -53,6 +60,10 @@ def add_cafe():
 
 @app.route('/cafes')
 def cafes():
+    """
+    This function read data from csv file and render data to cafes.html
+    :return: render_template('cafes.html', cafes=list_of_rows)
+    """
     with open('cafe-data.csv', newline='', encoding="utf-8") as csv_file:
         csv_data = csv.reader(csv_file, delimiter=',')
         list_of_rows = [row for row in csv_data]
